@@ -1,16 +1,20 @@
 package io.umehara.lunchfinderandroid
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import dagger.android.support.DaggerAppCompatActivity
+import javax.inject.Inject
 
-class MainActivity: AppCompatActivity(), RestaurantListView {
+class MainActivity: DaggerAppCompatActivity(), RestaurantListView {
+
+    @Inject
+    lateinit var presenter: RestaurantListPresenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val presenter = RestaurantListPresenter()
         presenter.setView(this)
         presenter.onCreate()
     }

@@ -6,20 +6,20 @@ import org.junit.Before
 import org.junit.Test
 import java.util.Arrays.asList
 
-class RestaurantListPresenterTest {
-    private lateinit var presenter: RestaurantListPresenter
+class DefaultRestaurantListPresenterTest {
+    private lateinit var presenterDefault: DefaultRestaurantListPresenter
     private lateinit var mainActivity: FakeRestaurantListView
 
     @Before
     fun setUp() {
         mainActivity = FakeRestaurantListView()
-        presenter = RestaurantListPresenter()
-        presenter.setView(mainActivity)
+        presenterDefault = DefaultRestaurantListPresenter()
+        presenterDefault.setView(mainActivity)
     }
 
     @Test
     fun onCreate_setsRestaurants() {
-        presenter.onCreate()
+        presenterDefault.onCreate()
 
 
         val expectedRestaurants = asList(
