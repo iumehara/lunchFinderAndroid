@@ -13,13 +13,12 @@ class DefaultRestaurantListPresenterTest {
     @Before
     fun setUp() {
         mainActivity = FakeRestaurantListView()
-        presenterDefault = DefaultRestaurantListPresenter()
-        presenterDefault.setView(mainActivity)
+        presenterDefault = DefaultRestaurantListPresenter(mainActivity)
     }
 
     @Test
     fun onCreate_setsRestaurants() {
-        presenterDefault.onCreate()
+        presenterDefault.getRestaurants()
 
 
         val expectedRestaurants = asList(

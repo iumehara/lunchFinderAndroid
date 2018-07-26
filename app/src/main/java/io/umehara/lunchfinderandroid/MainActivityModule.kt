@@ -5,7 +5,13 @@ import dagger.Provides
 
 @Module
 class MainActivityModule {
-    @Provides fun providesRestaurantListPresenter(): RestaurantListPresenter {
-        return DefaultRestaurantListPresenter()
+    @Provides
+    fun providesRestaurantListView(mainActivity: MainActivity): RestaurantListView {
+        return mainActivity
+    }
+
+    @Provides
+    fun providesRestaurantListPresenter(restaurantListView: RestaurantListView): RestaurantListPresenter {
+        return DefaultRestaurantListPresenter(restaurantListView)
     }
 }

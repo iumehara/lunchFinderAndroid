@@ -15,8 +15,7 @@ class MainActivity: DaggerAppCompatActivity(), RestaurantListView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        presenter.setView(this)
-        presenter.onCreate()
+        presenter.getRestaurants()
     }
 
     override fun setRow(restaurants: List<Restaurant>) {
