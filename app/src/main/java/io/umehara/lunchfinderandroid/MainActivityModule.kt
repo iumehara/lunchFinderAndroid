@@ -6,12 +6,12 @@ import dagger.Provides
 @Module
 class MainActivityModule {
     @Provides
-    fun providesRestaurantListView(mainActivity: MainActivity): RestaurantListView {
+    fun providesRestaurantListView(mainActivity: MainActivity): MainView {
         return mainActivity
     }
 
     @Provides
-    fun providesRestaurantListPresenter(restaurantListView: RestaurantListView): RestaurantListPresenter {
-        return DefaultRestaurantListPresenter(restaurantListView)
+    fun providesRestaurantListPresenter(mainView: MainView): MainPresenter {
+        return DefaultMainPresenter(mainView)
     }
 }

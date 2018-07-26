@@ -6,10 +6,10 @@ import android.widget.ListView
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
-class MainActivity: DaggerAppCompatActivity(), RestaurantListView {
+class MainActivity: DaggerAppCompatActivity(), MainView {
 
     @Inject
-    lateinit var presenter: RestaurantListPresenter
+    lateinit var presenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

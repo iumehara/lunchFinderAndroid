@@ -1,5 +1,5 @@
 package io.umehara.lunchfinderandroid
 
-interface RestaurantListPresenter {
+interface MainPresenter {
     fun getRestaurants()
 }

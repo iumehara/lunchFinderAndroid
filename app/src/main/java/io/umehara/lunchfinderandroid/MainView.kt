@@ -1,5 +1,5 @@
 package io.umehara.lunchfinderandroid
 
-interface RestaurantListView {
+interface MainView {
     fun setRow(restaurants: List<Restaurant>)
 }

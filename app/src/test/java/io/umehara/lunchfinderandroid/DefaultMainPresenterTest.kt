@@ -6,14 +6,14 @@ import org.junit.Before
 import org.junit.Test
 import java.util.Arrays.asList
 
-class DefaultRestaurantListPresenterTest {
-    private lateinit var presenterDefault: DefaultRestaurantListPresenter
-    private lateinit var mainActivity: FakeRestaurantListView
+class DefaultMainPresenterTest {
+    private lateinit var presenterDefault: DefaultMainPresenter
+    private lateinit var mainActivity: FakeMainView
 
     @Before
     fun setUp() {
-        mainActivity = FakeRestaurantListView()
-        presenterDefault = DefaultRestaurantListPresenter(mainActivity)
+        mainActivity = FakeMainView()
+        presenterDefault = DefaultMainPresenter(mainActivity)
     }
 
     @Test

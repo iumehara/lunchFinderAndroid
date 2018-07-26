@@ -3,7 +3,7 @@ package io.umehara.lunchfinderandroid
 import java.util.Arrays.asList
 import javax.inject.Inject
 
-class DefaultRestaurantListPresenter @Inject constructor(private val restaurantListView: RestaurantListView): RestaurantListPresenter {
+class DefaultMainPresenter @Inject constructor(private val mainView: MainView): MainPresenter {
     override fun getRestaurants() {
         val restaurants = asList(
                 Restaurant(1, "First", "一"),
@@ -11,6 +11,6 @@ class DefaultRestaurantListPresenter @Inject constructor(private val restaurantL
                 Restaurant(3, "Third", "三")
         )
 
-        restaurantListView.setRow(restaurants)
+        mainView.setRow(restaurants)
     }
 }
