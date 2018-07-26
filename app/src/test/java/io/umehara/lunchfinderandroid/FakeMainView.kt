@@ -5,4 +5,9 @@ class FakeMainView: MainView {
     override fun setRow(restaurants: List<Restaurant>) {
         setRowArguments = restaurants
     }
+
+    var setDetailArgument: Restaurant? = null
+    override fun setDetail(restaurant: Restaurant) {
+        setDetailArgument = restaurant
+    }
 }

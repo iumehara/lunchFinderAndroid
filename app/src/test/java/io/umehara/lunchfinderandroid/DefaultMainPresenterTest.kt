@@ -17,7 +17,7 @@ class DefaultMainPresenterTest {
     }
 
     @Test
-    fun onCreate_setsRestaurants() {
+    fun getRestaurants_setsRestaurants() {
         presenterDefault.getRestaurants()
 
 

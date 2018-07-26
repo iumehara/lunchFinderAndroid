@@ -1,13 +1,14 @@
 package io.umehara.lunchfinderandroid
 
 import android.os.Bundle
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.TextView
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
 class MainActivity: DaggerAppCompatActivity(), MainView {
-
     @Inject
     lateinit var presenter: MainPresenter
 
@@ -28,5 +29,12 @@ class MainActivity: DaggerAppCompatActivity(), MainView {
         val restaurantList: ListView = findViewById(R.id.restaurant_list)
 
         restaurantList.adapter = adapterRestaurants
+        val clickListener = OnItemClickListener({ _, _, position, _ -> setDetail(restaurants[position]) })
+        restaurantList.onItemClickListener = clickListener
+    }
+
+    override fun setDetail(restaurant: Restaurant) {
+        val restaurantNameLabel = findViewById<TextView>(R.id.restaurant_name)
+        restaurantNameLabel.text = restaurant.name
     }
 }
