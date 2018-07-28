@@ -6,6 +6,7 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
 import dagger.android.support.DaggerAppCompatActivity
+import io.umehara.lunchfinderandroid.restaurant.Restaurant
 import javax.inject.Inject
 
 class MainActivity: DaggerAppCompatActivity(), MainView {

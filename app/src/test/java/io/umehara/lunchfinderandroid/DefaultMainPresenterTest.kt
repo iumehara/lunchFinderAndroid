@@ -1,5 +1,7 @@
 package io.umehara.lunchfinderandroid
 
+import io.umehara.lunchfinderandroid.restaurant.Restaurant
+import io.umehara.lunchfinderandroid.restaurant.StubRestaurantRepo
 import org.hamcrest.core.IsEqual.equalTo
 import org.junit.Assert.assertThat
 import org.junit.Before
@@ -7,25 +9,26 @@ import org.junit.Test
 import java.util.Arrays.asList
 
 class DefaultMainPresenterTest {
-    private lateinit var presenterDefault: DefaultMainPresenter
-    private lateinit var mainActivity: FakeMainView
+    private lateinit var defaultMainPresenter: DefaultMainPresenter
+    private lateinit var view: FakeMainView
+    private lateinit var repo: StubRestaurantRepo
 
     @Before
     fun setUp() {
-        mainActivity = FakeMainView()
-        presenterDefault = DefaultMainPresenter(mainActivity)
+        view = FakeMainView()
+        repo = StubRestaurantRepo()
+        defaultMainPresenter = DefaultMainPresenter(view, repo)
     }
 
     @Test
     fun getRestaurants_setsRestaurants() {
-        presenterDefault.getRestaurants()
-
+        defaultMainPresenter.getRestaurants()
 
         val expectedRestaurants = asList(
                 Restaurant(1, "First", "一"),
                 Restaurant(2, "Second", "二"),
                 Restaurant(3, "Third", "三")
         )
-        assertThat(mainActivity.setRowArguments, equalTo(expectedRestaurants))
+        assertThat(view.setRowArguments, equalTo(expectedRestaurants))
     }
 }

@@ -2,6 +2,8 @@ package io.umehara.lunchfinderandroid
 
 import dagger.Module
 import dagger.Provides
+import io.umehara.lunchfinderandroid.restaurant.DefaultRestaurantRepo
+import io.umehara.lunchfinderandroid.restaurant.RestaurantRepo
 
 @Module
 class MainActivityModule {
@@ -11,7 +13,12 @@ class MainActivityModule {
     }
 
     @Provides
-    fun providesRestaurantListPresenter(mainView: MainView): MainPresenter {
-        return DefaultMainPresenter(mainView)
+    fun providesRestaurantListPresenter(mainView: MainView, repo: RestaurantRepo): MainPresenter {
+        return DefaultMainPresenter(mainView, repo)
+    }
+
+    @Provides
+    fun providesRestaurantRepo(): RestaurantRepo {
+        return DefaultRestaurantRepo()
     }
 }
