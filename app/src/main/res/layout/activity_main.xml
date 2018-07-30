@@ -38,6 +38,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Restaurant Name" />
+
+        <TextView
+            android:id="@+id/restaurant_name_jp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="レストラン名" />
     </LinearLayout>
 
     <com.google.android.gms.maps.MapView

@@ -72,6 +72,9 @@ class MainActivity: DaggerAppCompatActivity(), MainView, OnMapReadyCallback {
     override fun setDetail(restaurant: Restaurant) {
         val restaurantNameLabel = findViewById<TextView>(R.id.restaurant_name)
         restaurantNameLabel.text = restaurant.name
+
+        val restaurantNameJpLabel = findViewById<TextView>(R.id.restaurant_name_jp)
+        restaurantNameJpLabel.text = restaurant.nameJp
     }
 
     override fun onStart() {
