@@ -24,16 +24,14 @@
     <LinearLayout
         android:id="@+id/restaurant_detail"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="123dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/restaurant_list"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toEndOf="@+id/restaurant_list">
 
         <TextView
             android:id="@+id/restaurant_name"
@@ -41,5 +39,19 @@
             android:layout_height="wrap_content"
             android:text="Restaurant Name" />
     </LinearLayout>
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/multiple_marker_map"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/restaurant_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/restaurant_list"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.508" />
 
 </android.support.constraint.ConstraintLayout>
