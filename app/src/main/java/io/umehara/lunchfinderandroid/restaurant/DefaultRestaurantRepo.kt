@@ -5,21 +5,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import javax.inject.Inject
 
-class DefaultRestaurantRepo: RestaurantRepo {
-    private var restaurantCaller: RetrofitRestaurantCaller = Retrofit
-            .Builder()
-            .baseUrl("https://lunch-finder-api.cfapps.io/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(RetrofitRestaurantCaller::class.java)
+class DefaultRestaurantRepo @Inject constructor(private val restaurantCaller: RetrofitRestaurantCaller): RestaurantRepo {
 
     override fun getAll(): Single<List<Restaurant>> {
         val restaurantsSingle: Single<List<Restaurant>> = Single.create { observer ->
-            restaurantCaller.getAll().enqueue(object : Callback<List<Restaurant>> {
+            restaurantCaller.getAll().enqueue(object: Callback<List<Restaurant>> {
                 override fun onResponse(call: Call<List<Restaurant>>?, response: Response<List<Restaurant>>?) {
                     if (response == null || !response.isSuccessful || response.body() == null) {
                         observer.onError(IOException())
@@ -31,9 +24,7 @@ class DefaultRestaurantRepo: RestaurantRepo {
                 }
 
                 override fun onFailure(call: Call<List<Restaurant>>?, t: Throwable?) {
-                    if (t != null) {
-                        observer.onError(t)
-                    }
+                    if (t != null) observer.onError(IOException(t.message))
                 }
             })
         }
