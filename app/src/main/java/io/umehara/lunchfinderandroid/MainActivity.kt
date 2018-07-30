@@ -19,6 +19,7 @@ import javax.inject.Inject
 
 class MainActivity: DaggerAppCompatActivity(), MainView, OnMapReadyCallback {
     private lateinit var map: MapView
+    private lateinit var allRestaurants: List<Restaurant>
 
     @Inject
     lateinit var presenter: MainPresenter
@@ -33,10 +34,10 @@ class MainActivity: DaggerAppCompatActivity(), MainView, OnMapReadyCallback {
         map = findViewById(R.id.multiple_marker_map)
 
         map.onCreate(savedInstanceState)
-        map.getMapAsync(this)
     }
 
     override fun setRow(restaurants: List<Restaurant>) {
+        allRestaurants = restaurants
         val adapterRestaurants: ArrayAdapter<String> = ArrayAdapter(
                 applicationContext,
                 android.R.layout.simple_list_item_1,
@@ -48,13 +49,24 @@ class MainActivity: DaggerAppCompatActivity(), MainView, OnMapReadyCallback {
         restaurantList.adapter = adapterRestaurants
         val clickListener = OnItemClickListener({ _, _, position, _ -> setDetail(restaurants[position]) })
         restaurantList.onItemClickListener = clickListener
+
+        map.getMapAsync(this)
     }
 
     override fun onMapReady(map: GoogleMap) {
         val startingPoint = LatLng(35.660480, 139.729247)
         val startingMarker = MarkerOptions().position(startingPoint).title("Roppongi Hills")
         map.addMarker(startingMarker)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(startingPoint, 15.0F))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(startingPoint, 16.0F))
+        allRestaurants.forEach({
+            val geolocation = it.geolocation
+            if (geolocation != null) {
+                val marker = MarkerOptions()
+                        .position(LatLng(geolocation.lat.toDouble(), geolocation.long.toDouble()))
+                        .title(it.name)
+                map.addMarker(marker)
+            }
+        })
     }
 
     override fun setDetail(restaurant: Restaurant) {

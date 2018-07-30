@@ -28,9 +28,9 @@ class DefaultMainPresenterTest {
         defaultMainPresenter.getRestaurants()
 
         val expectedRestaurants = asList(
-                Restaurant(1, "First", "一"),
-                Restaurant(2, "Second", "二"),
-                Restaurant(3, "Third", "三")
+                Restaurant(1, "First", "一", "", null, emptyList()),
+                Restaurant(2, "Second", "二", "", null, emptyList()),
+                Restaurant(3, "Third", "三", "", null, emptyList())
         )
         assertThat(view.setRowArguments, equalTo(expectedRestaurants))
     }

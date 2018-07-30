@@ -31,7 +31,7 @@ class DefaultRestaurantRepoTest {
     fun getAll_handlesSuccessfulResponseFromRequest() {
         doAnswer {
             val callback = it.arguments[0] as Callback<List<Restaurant>>
-            val successResponse = Response.success(asList(Restaurant(1, "1", "1")))
+            val successResponse = Response.success(asList(Restaurant(1, "1", "1", "", null, emptyList())))
 
             callback.onResponse(mockCall, successResponse)
             null
@@ -41,6 +41,6 @@ class DefaultRestaurantRepoTest {
         val responseSingle = repo.getAll()
 
 
-        responseSingle.test().assertResult(asList(Restaurant(1, "1", "1")))
+        responseSingle.test().assertResult(asList(Restaurant(1, "1", "1", "", null, emptyList())))
     }
 }
