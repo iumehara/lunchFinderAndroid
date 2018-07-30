@@ -1,7 +1,6 @@
 package io.umehara.lunchfinderandroid.restaurant
 
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -11,7 +10,7 @@ import javax.inject.Inject
 class DefaultRestaurantRepo @Inject constructor(private val restaurantCaller: RetrofitRestaurantCaller): RestaurantRepo {
 
     override fun getAll(): Single<List<Restaurant>> {
-        val restaurantsSingle: Single<List<Restaurant>> = Single.create { observer ->
+        return Single.create { observer ->
             restaurantCaller.getAll().enqueue(object: Callback<List<Restaurant>> {
                 override fun onResponse(call: Call<List<Restaurant>>?, response: Response<List<Restaurant>>?) {
                     if (response == null || !response.isSuccessful || response.body() == null) {
@@ -28,7 +27,5 @@ class DefaultRestaurantRepo @Inject constructor(private val restaurantCaller: Re
                 }
             })
         }
-
-        return restaurantsSingle.observeOn(AndroidSchedulers.mainThread())
     }
 }

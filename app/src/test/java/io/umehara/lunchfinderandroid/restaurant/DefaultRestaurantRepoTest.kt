@@ -3,8 +3,6 @@ package io.umehara.lunchfinderandroid.restaurant
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.android.plugins.RxAndroidPlugins
-import io.reactivex.schedulers.Schedulers
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
@@ -22,8 +20,6 @@ class DefaultRestaurantRepoTest {
 
     @Before
     fun setUp() {
-        RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
-
         restaurantCaller= mock()
         repo = DefaultRestaurantRepo(restaurantCaller)
 

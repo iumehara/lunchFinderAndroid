@@ -1,5 +1,7 @@
 package io.umehara.lunchfinderandroid
 
+import io.reactivex.android.plugins.RxAndroidPlugins
+import io.reactivex.schedulers.Schedulers
 import io.umehara.lunchfinderandroid.restaurant.Restaurant
 import io.umehara.lunchfinderandroid.restaurant.StubRestaurantRepo
 import org.hamcrest.core.IsEqual.equalTo
@@ -15,6 +17,7 @@ class DefaultMainPresenterTest {
 
     @Before
     fun setUp() {
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
         view = FakeMainView()
         repo = StubRestaurantRepo()
         defaultMainPresenter = DefaultMainPresenter(view, repo)
