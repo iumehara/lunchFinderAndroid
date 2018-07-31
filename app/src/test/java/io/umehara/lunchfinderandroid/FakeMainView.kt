@@ -3,9 +3,14 @@ package io.umehara.lunchfinderandroid
 import io.umehara.lunchfinderandroid.restaurant.Restaurant
 
 class FakeMainView: MainView {
-    var setRowArguments: List<Restaurant>? = null
-    override fun setRow(restaurants: List<Restaurant>) {
-        setRowArguments = restaurants
+    var setRestaurantListArguments: List<Restaurant>? = null
+    override fun setRestaurantList(restaurants: List<Restaurant>) {
+        setRestaurantListArguments = restaurants
+    }
+
+    var setMapArguments: List<Restaurant>? = null
+    override fun setMap(restaurants: List<Restaurant>) {
+        setMapArguments = restaurants
     }
 
     var setDetailArgument: Restaurant? = null

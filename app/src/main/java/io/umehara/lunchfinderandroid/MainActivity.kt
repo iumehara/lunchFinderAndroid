@@ -5,21 +5,14 @@ import android.os.PersistableBundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.TextView
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import dagger.android.support.DaggerAppCompatActivity
 import io.umehara.lunchfinderandroid.restaurant.Restaurant
 import io.umehara.lunchfinderandroid.restaurant.RestaurantRecyclerViewAdapter
 import javax.inject.Inject
 
-
-class MainActivity : DaggerAppCompatActivity(), MainView, OnMapReadyCallback {
-    private lateinit var map: MapView
-    private lateinit var allRestaurants: List<Restaurant>
+class MainActivity : DaggerAppCompatActivity(), MainView {
+    private lateinit var mapView: MapView
 
     @Inject
     lateinit var presenter: MainPresenter
@@ -35,17 +28,15 @@ class MainActivity : DaggerAppCompatActivity(), MainView, OnMapReadyCallback {
 
         presenter.getRestaurants()
 
-        map = findViewById(R.id.multiple_marker_map)
-
-        map.onCreate(savedInstanceState)
+        mapView = findViewById(R.id.multiple_marker_map)
+        mapView.onCreate(savedInstanceState)
     }
 
-    override fun setRow(restaurants: List<Restaurant>) {
-        allRestaurants = restaurants
+    override fun setRestaurantList(restaurants: List<Restaurant>) {
         val restaurantRecyclerView = findViewById<RecyclerView>(R.id.restaurant_recycler_view)
         val linearLayoutManager = LinearLayoutManager(this)
         val recyclerViewAdapter = RestaurantRecyclerViewAdapter(
-                allRestaurants,
+                restaurants,
                 object : OnRestaurantClickListener {
                     override fun onClick(restaurant: Restaurant) {
                         setDetail(restaurant)
@@ -58,24 +49,11 @@ class MainActivity : DaggerAppCompatActivity(), MainView, OnMapReadyCallback {
             layoutManager = linearLayoutManager
             adapter = recyclerViewAdapter
         }
-
-        map.getMapAsync(this)
     }
 
-    override fun onMapReady(map: GoogleMap) {
-        val startingPoint = LatLng(35.660480, 139.729247)
-        val startingMarker = MarkerOptions().position(startingPoint).title("Roppongi Hills")
-        map.addMarker(startingMarker)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(startingPoint, 16.0F))
-        allRestaurants.forEach({
-            val geolocation = it.geolocation
-            if (geolocation != null) {
-                val marker = MarkerOptions()
-                        .position(LatLng(geolocation.lat.toDouble(), geolocation.long.toDouble()))
-                        .title(it.name)
-                map.addMarker(marker)
-            }
-        })
+    override fun setMap(restaurants: List<Restaurant>) {
+        val multipleMarkerMap = MultipleMarkerMap(restaurants)
+        mapView.getMapAsync(multipleMarkerMap)
     }
 
     override fun setDetail(restaurant: Restaurant) {
@@ -88,36 +66,36 @@ class MainActivity : DaggerAppCompatActivity(), MainView, OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        map.onStart()
+        mapView.onStart()
     }
 
     override fun onResume() {
         super.onResume()
-        map.onResume()
+        mapView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        map.onPause()
+        mapView.onPause()
     }
 
     override fun onStop() {
         super.onStop()
-        map.onStop()
+        mapView.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        map.onDestroy()
+        mapView.onDestroy()
     }
 
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         super.onSaveInstanceState(outState, outPersistentState)
-        map.onSaveInstanceState(outState)
+        mapView.onSaveInstanceState(outState)
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        map.onLowMemory()
+        mapView.onLowMemory()
     }
 }

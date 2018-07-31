@@ -14,7 +14,10 @@ class DefaultMainPresenter @Inject constructor(private val view: MainView,
                 .getAll()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { restaurants -> view.setRow(restaurants) },
+                        { restaurants ->
+                            view.setRestaurantList(restaurants)
+                            view.setMap(restaurants)
+                        },
                         { error -> println("Error" + error.message) }
                 )
         compositeDisposable.add(disposable)

@@ -24,7 +24,7 @@ class DefaultMainPresenterTest {
     }
 
     @Test
-    fun getRestaurants_setsRestaurants() {
+    fun getRestaurants_setsRestaurantsToRestaurantList() {
         defaultMainPresenter.getRestaurants()
 
         val expectedRestaurants = asList(
@@ -32,6 +32,18 @@ class DefaultMainPresenterTest {
                 Restaurant(2, "Second", "二", "", null, emptyList()),
                 Restaurant(3, "Third", "三", "", null, emptyList())
         )
-        assertThat(view.setRowArguments, equalTo(expectedRestaurants))
+        assertThat(view.setRestaurantListArguments, equalTo(expectedRestaurants))
+    }
+
+    @Test
+    fun getRestaurants_setsRestaurantsToMap() {
+        defaultMainPresenter.getRestaurants()
+
+        val expectedRestaurants = asList(
+                Restaurant(1, "First", "一", "", null, emptyList()),
+                Restaurant(2, "Second", "二", "", null, emptyList()),
+                Restaurant(3, "Third", "三", "", null, emptyList())
+        )
+        assertThat(view.setMapArguments, equalTo(expectedRestaurants))
     }
 }

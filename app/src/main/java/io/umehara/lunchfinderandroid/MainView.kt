@@ -3,6 +3,7 @@ package io.umehara.lunchfinderandroid
 import io.umehara.lunchfinderandroid.restaurant.Restaurant
 
 interface MainView {
-    fun setRow(restaurants: List<Restaurant>)
+    fun setRestaurantList(restaurants: List<Restaurant>)
+    fun setMap(restaurants: List<Restaurant>)
     fun setDetail(restaurant: Restaurant)
 }
