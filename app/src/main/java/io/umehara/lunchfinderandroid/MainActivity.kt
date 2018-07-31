@@ -4,10 +4,6 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.Adapter
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -16,9 +12,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.android.support.DaggerAppCompatActivity
-import io.umehara.lunchfinderandroid.MainActivity.ClickRestaurantHandler
-import io.umehara.lunchfinderandroid.RestaurantRecyclerViewAdapter.ViewHolder
 import io.umehara.lunchfinderandroid.restaurant.Restaurant
+import io.umehara.lunchfinderandroid.restaurant.RestaurantRecyclerViewAdapter
 import javax.inject.Inject
 
 
@@ -29,7 +24,7 @@ class MainActivity : DaggerAppCompatActivity(), MainView, OnMapReadyCallback {
     @Inject
     lateinit var presenter: MainPresenter
 
-    interface ClickRestaurantHandler {
+    interface OnRestaurantClickListener {
         fun onClick(restaurant: Restaurant)
     }
 
@@ -51,7 +46,7 @@ class MainActivity : DaggerAppCompatActivity(), MainView, OnMapReadyCallback {
         val linearLayoutManager = LinearLayoutManager(this)
         val recyclerViewAdapter = RestaurantRecyclerViewAdapter(
                 allRestaurants,
-                object : ClickRestaurantHandler {
+                object : OnRestaurantClickListener {
                     override fun onClick(restaurant: Restaurant) {
                         setDetail(restaurant)
                     }
@@ -124,27 +119,5 @@ class MainActivity : DaggerAppCompatActivity(), MainView, OnMapReadyCallback {
     override fun onLowMemory() {
         super.onLowMemory()
         map.onLowMemory()
-    }
-}
-
-class RestaurantRecyclerViewAdapter(private val restaurants: List<Restaurant>,
-                                    private val clickListener: ClickRestaurantHandler) : Adapter<ViewHolder>() {
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_row, parent, false)
-        return ViewHolder(view)
-    }
-
-    override fun getItemCount(): Int {
-        return restaurants.size
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val restaurantNameTextView = holder.itemView.findViewById<TextView>(R.id.row_restaurant_name)
-        val restaurant = restaurants[position]
-        restaurantNameTextView.text = restaurant.name
-
-        restaurantNameTextView.setOnClickListener({ _ -> clickListener.onClick(restaurant) })
     }
 }
