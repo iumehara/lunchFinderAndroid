@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.widget.TextView
 import com.google.android.gms.maps.MapView
 import dagger.android.support.DaggerAppCompatActivity
+import io.umehara.lunchfinderandroid.category.CategoryRecyclerViewAdapter
 import io.umehara.lunchfinderandroid.restaurant.Restaurant
 import io.umehara.lunchfinderandroid.restaurant.RestaurantRecyclerViewAdapter
 import javax.inject.Inject
@@ -62,6 +63,15 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
 
         val restaurantNameJpLabel = findViewById<TextView>(R.id.restaurant_name_jp)
         restaurantNameJpLabel.text = restaurant.nameJp
+
+        val categoryRecyclerView = findViewById<RecyclerView>(R.id.category_recycler_view)
+        val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        val categoryRecyclerViewAdapter = CategoryRecyclerViewAdapter(restaurant.categories)
+        categoryRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = linearLayoutManager
+            adapter = categoryRecyclerViewAdapter
+        }
     }
 
     override fun onStart() {

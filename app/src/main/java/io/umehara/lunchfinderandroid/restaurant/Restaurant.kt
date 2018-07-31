@@ -1,5 +1,6 @@
 package io.umehara.lunchfinderandroid.restaurant
 
+import io.umehara.lunchfinderandroid.category.Category
 import io.umehara.lunchfinderandroid.Geolocation
 
 data class Restaurant(
@@ -8,5 +9,5 @@ data class Restaurant(
         val nameJp: String,
         val website: String?,
         val geolocation: Geolocation?,
-        val categoryIds: List<Long> = ArrayList()
+        val categories: List<Category>
 )

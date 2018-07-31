@@ -4,6 +4,6 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 interface RetrofitRestaurantCaller {
-    @GET("restaurants")
+    @GET("restaurants/full")
     fun getAll(): Call<List<Restaurant>>
 }

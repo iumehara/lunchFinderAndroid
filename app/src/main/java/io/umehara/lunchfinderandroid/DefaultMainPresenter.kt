@@ -17,6 +17,7 @@ class DefaultMainPresenter @Inject constructor(private val view: MainView,
                         { restaurants ->
                             view.setRestaurantList(restaurants)
                             view.setMap(restaurants)
+                            view.setDetail(restaurants[0])
                         },
                         { error -> println("Error" + error.message) }
                 )
