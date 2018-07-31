@@ -8,6 +8,7 @@ import android.widget.TextView
 import com.google.android.gms.maps.MapView
 import dagger.android.support.DaggerAppCompatActivity
 import io.umehara.lunchfinderandroid.category.CategoryRecyclerViewAdapter
+import io.umehara.lunchfinderandroid.map.MultipleMarkerMap
 import io.umehara.lunchfinderandroid.restaurant.Restaurant
 import io.umehara.lunchfinderandroid.restaurant.RestaurantRecyclerViewAdapter
 import javax.inject.Inject

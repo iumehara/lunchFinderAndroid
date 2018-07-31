@@ -1,4 +1,4 @@
-package io.umehara.lunchfinderandroid
+package io.umehara.lunchfinderandroid.map
 
 import java.math.BigDecimal
 

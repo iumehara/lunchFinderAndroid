@@ -1,4 +1,4 @@
-package io.umehara.lunchfinderandroid
+package io.umehara.lunchfinderandroid.map
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
