@@ -2,9 +2,12 @@ package io.umehara.lunchfinderandroid
 
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
-import android.widget.ListView
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.Adapter
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -13,16 +16,22 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.android.support.DaggerAppCompatActivity
+import io.umehara.lunchfinderandroid.MainActivity.ClickRestaurantHandler
+import io.umehara.lunchfinderandroid.RestaurantRecyclerViewAdapter.ViewHolder
 import io.umehara.lunchfinderandroid.restaurant.Restaurant
 import javax.inject.Inject
 
 
-class MainActivity: DaggerAppCompatActivity(), MainView, OnMapReadyCallback {
+class MainActivity : DaggerAppCompatActivity(), MainView, OnMapReadyCallback {
     private lateinit var map: MapView
     private lateinit var allRestaurants: List<Restaurant>
 
     @Inject
     lateinit var presenter: MainPresenter
+
+    interface ClickRestaurantHandler {
+        fun onClick(restaurant: Restaurant)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,17 +47,22 @@ class MainActivity: DaggerAppCompatActivity(), MainView, OnMapReadyCallback {
 
     override fun setRow(restaurants: List<Restaurant>) {
         allRestaurants = restaurants
-        val adapterRestaurants: ArrayAdapter<String> = ArrayAdapter(
-                applicationContext,
-                android.R.layout.simple_list_item_1,
-                restaurants.map(Restaurant::name)
+        val restaurantRecyclerView = findViewById<RecyclerView>(R.id.restaurant_recycler_view)
+        val linearLayoutManager = LinearLayoutManager(this)
+        val recyclerViewAdapter = RestaurantRecyclerViewAdapter(
+                allRestaurants,
+                object : ClickRestaurantHandler {
+                    override fun onClick(restaurant: Restaurant) {
+                        setDetail(restaurant)
+                    }
+                }
         )
 
-        val restaurantList: ListView = findViewById(R.id.restaurant_list)
-
-        restaurantList.adapter = adapterRestaurants
-        val clickListener = OnItemClickListener({ _, _, position, _ -> setDetail(restaurants[position]) })
-        restaurantList.onItemClickListener = clickListener
+        restaurantRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = linearLayoutManager
+            adapter = recyclerViewAdapter
+        }
 
         map.getMapAsync(this)
     }
@@ -110,5 +124,27 @@ class MainActivity: DaggerAppCompatActivity(), MainView, OnMapReadyCallback {
     override fun onLowMemory() {
         super.onLowMemory()
         map.onLowMemory()
+    }
+}
+
+class RestaurantRecyclerViewAdapter(private val restaurants: List<Restaurant>,
+                                    private val clickListener: ClickRestaurantHandler) : Adapter<ViewHolder>() {
+    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_row, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun getItemCount(): Int {
+        return restaurants.size
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val restaurantNameTextView = holder.itemView.findViewById<TextView>(R.id.row_restaurant_name)
+        val restaurant = restaurants[position]
+        restaurantNameTextView.text = restaurant.name
+
+        restaurantNameTextView.setOnClickListener({ _ -> clickListener.onClick(restaurant) })
     }
 }
