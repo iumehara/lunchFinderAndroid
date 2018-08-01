@@ -15,8 +15,8 @@ class DefaultMainPresenter @Inject constructor(private val view: MainView,
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { restaurants ->
-                            view.setRestaurantList(restaurants)
                             view.setMap(restaurants)
+                            view.setRestaurantList(restaurants)
                             view.setDetail(restaurants[0])
                         },
                         { error -> println("Error" + error.message) }

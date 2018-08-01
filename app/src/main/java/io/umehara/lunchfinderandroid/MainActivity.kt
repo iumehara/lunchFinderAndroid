@@ -15,6 +15,7 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity(), MainView {
     private lateinit var mapView: MapView
+    private lateinit var multipleMarkerMap: MultipleMarkerMap
 
     @Inject
     lateinit var presenter: MainPresenter
@@ -42,6 +43,7 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
                 object : OnRestaurantClickListener {
                     override fun onClick(restaurant: Restaurant) {
                         setDetail(restaurant)
+                        multipleMarkerMap.updateMarker(restaurant.geolocation)
                     }
                 }
         )
@@ -54,7 +56,7 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
     }
 
     override fun setMap(restaurants: List<Restaurant>) {
-        val multipleMarkerMap = MultipleMarkerMap(restaurants)
+        multipleMarkerMap = MultipleMarkerMap(restaurants)
         mapView.getMapAsync(multipleMarkerMap)
     }
 
