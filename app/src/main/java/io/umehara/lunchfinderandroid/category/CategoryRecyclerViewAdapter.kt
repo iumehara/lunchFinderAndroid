@@ -1,5 +1,7 @@
 package io.umehara.lunchfinderandroid.category
 
+import android.content.Context
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -22,5 +24,16 @@ class CategoryRecyclerViewAdapter(private val categories: List<Category>) : Recy
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val categoryNameTextView = holder.itemView.findViewById<TextView>(R.id.row_category_name)
         categoryNameTextView.text = categories[position].name
+    }
+
+    fun setOnRecyclerView(context: Context, recyclerView: RecyclerView) {
+        val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        val categoryRecyclerViewAdapter = this
+        recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = linearLayoutManager
+            adapter = categoryRecyclerViewAdapter
+        }
+
     }
 }

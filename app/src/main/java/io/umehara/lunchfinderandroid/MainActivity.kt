@@ -2,7 +2,6 @@ package io.umehara.lunchfinderandroid
 
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.TextView
 import com.google.android.gms.maps.MapView
@@ -37,7 +36,7 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
 
     override fun setRestaurantList(restaurants: List<Restaurant>) {
         val restaurantRecyclerView = findViewById<RecyclerView>(R.id.restaurant_recycler_view)
-        val linearLayoutManager = LinearLayoutManager(this)
+
         val recyclerViewAdapter = RestaurantRecyclerViewAdapter(
                 restaurants,
                 object : OnRestaurantClickListener {
@@ -47,12 +46,7 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
                     }
                 }
         )
-
-        restaurantRecyclerView.apply {
-            setHasFixedSize(true)
-            layoutManager = linearLayoutManager
-            adapter = recyclerViewAdapter
-        }
+        recyclerViewAdapter.setOnRecyclerView(this, restaurantRecyclerView)
     }
 
     override fun setMap(restaurants: List<Restaurant>) {
@@ -68,13 +62,8 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
         restaurantNameJpLabel.text = restaurant.nameJp
 
         val categoryRecyclerView = findViewById<RecyclerView>(R.id.category_recycler_view)
-        val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         val categoryRecyclerViewAdapter = CategoryRecyclerViewAdapter(restaurant.categories)
-        categoryRecyclerView.apply {
-            setHasFixedSize(true)
-            layoutManager = linearLayoutManager
-            adapter = categoryRecyclerViewAdapter
-        }
+        categoryRecyclerViewAdapter.setOnRecyclerView(this, categoryRecyclerView)
     }
 
     override fun onStart() {
