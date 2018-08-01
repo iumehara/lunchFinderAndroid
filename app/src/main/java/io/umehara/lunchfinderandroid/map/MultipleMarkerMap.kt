@@ -29,6 +29,10 @@ class MultipleMarkerMap(private val restaurants: List<Restaurant>) : OnMapReadyC
                 markers.add(marker)
             }
         })
+        map.setOnMarkerClickListener({
+            setCurrent(it)
+            false
+        })
     }
 
     fun updateMarker(geolocation: Geolocation?) {
@@ -39,16 +43,16 @@ class MultipleMarkerMap(private val restaurants: List<Restaurant>) : OnMapReadyC
                     it.position.longitude == geolocation.long.toDouble()
         }
 
-        unsetCurrent(currentMarker)
-
         if (markerToUpdate != null) {
-            currentMarker = setCurrent(markerToUpdate)
+            setCurrent(markerToUpdate)
         }
     }
 
-    private fun setCurrent(marker: Marker): Marker {
+    private fun setCurrent(marker: Marker) {
+        unsetCurrent(currentMarker)
+
         marker.alpha = 1.0f
-        return marker
+        currentMarker = marker
     }
 
     private fun unsetCurrent(marker: Marker?) {
