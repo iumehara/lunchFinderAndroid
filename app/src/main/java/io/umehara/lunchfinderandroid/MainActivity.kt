@@ -6,7 +6,9 @@ import android.support.v7.widget.RecyclerView
 import android.widget.TextView
 import com.google.android.gms.maps.MapView
 import dagger.android.support.DaggerAppCompatActivity
+import io.umehara.lunchfinderandroid.category.Category
 import io.umehara.lunchfinderandroid.category.CategoryRecyclerViewAdapter
+import io.umehara.lunchfinderandroid.category.OnCategoryClickListener
 import io.umehara.lunchfinderandroid.map.MultipleMarkerMap
 import io.umehara.lunchfinderandroid.restaurant.Restaurant
 import io.umehara.lunchfinderandroid.restaurant.RestaurantRecyclerViewAdapter
@@ -14,8 +16,8 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity(), MainView {
     private lateinit var mapView: MapView
-    private lateinit var multipleMarkerMap: MultipleMarkerMap
 
+    private lateinit var multipleMarkerMap: MultipleMarkerMap
     @Inject
     lateinit var presenter: MainPresenter
 
@@ -29,9 +31,23 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
         setContentView(R.layout.activity_main)
 
         presenter.getRestaurants()
+        presenter.getCategories()
 
         mapView = findViewById(R.id.multiple_marker_map)
         mapView.onCreate(savedInstanceState)
+    }
+
+    override fun setCategoryList(categories: List<Category>) {
+        val categoryRecyclerView = findViewById<RecyclerView>(R.id.categories_recycler_view)
+        val categoryRecyclerViewAdapter = CategoryRecyclerViewAdapter(
+                categories,
+                object : OnCategoryClickListener {
+                    override fun onClick(category: Category) {
+                        presenter.getCategoryRestaurants(category.id)
+                    }
+                }
+        )
+        categoryRecyclerViewAdapter.setOnRecyclerView(this, categoryRecyclerView)
     }
 
     override fun setRestaurantList(restaurants: List<Restaurant>) {

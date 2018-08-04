@@ -7,11 +7,31 @@ import retrofit2.Response
 import java.io.IOException
 import javax.inject.Inject
 
-class DefaultRestaurantRepo @Inject constructor(private val restaurantCaller: RetrofitRestaurantCaller): RestaurantRepo {
-
+class DefaultRestaurantRepo
+@Inject constructor(private val restaurantCaller: RetrofitRestaurantCaller) : RestaurantRepo {
     override fun getAll(): Single<List<Restaurant>> {
         return Single.create { observer ->
-            restaurantCaller.getAll().enqueue(object: Callback<List<Restaurant>> {
+            restaurantCaller.getAll().enqueue(object : Callback<List<Restaurant>> {
+                override fun onResponse(call: Call<List<Restaurant>>?, response: Response<List<Restaurant>>?) {
+                    if (response == null || !response.isSuccessful || response.body() == null) {
+                        observer.onError(IOException())
+                        return
+                    }
+
+                    val restaurants = response.body() ?: return
+                    observer.onSuccess(restaurants)
+                }
+
+                override fun onFailure(call: Call<List<Restaurant>>?, t: Throwable?) {
+                    if (t != null) observer.onError(IOException(t.message))
+                }
+            })
+        }
+    }
+
+    override fun getWhere(categoryId: Long): Single<List<Restaurant>> {
+        return Single.create { observer ->
+            restaurantCaller.getWhere(categoryId).enqueue(object : Callback<List<Restaurant>> {
                 override fun onResponse(call: Call<List<Restaurant>>?, response: Response<List<Restaurant>>?) {
                     if (response == null || !response.isSuccessful || response.body() == null) {
                         observer.onError(IOException())

@@ -14,4 +14,15 @@ class StubRestaurantRepo: RestaurantRepo {
             observer.onSuccess(restaurants)
         }
     }
+
+    override fun getWhere(categoryId: Long): Single<List<Restaurant>> {
+        return Single.create { observer ->
+            val restaurants = asList(
+                    Restaurant(1, "First", "一", "", null, emptyList()),
+                    Restaurant(2, "Second", "二", "", null, emptyList()),
+                    Restaurant(3, "Third", "三", "", null, emptyList())
+            )
+            observer.onSuccess(restaurants)
+        }
+    }
 }

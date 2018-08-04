@@ -20,15 +20,15 @@ class DefaultRestaurantRepoTest {
 
     @Before
     fun setUp() {
-        restaurantCaller= mock()
+        restaurantCaller = mock()
         repo = DefaultRestaurantRepo(restaurantCaller)
 
         mockCall = Mockito.mock(Call::class.java) as Call<List<Restaurant>>
-        whenever(restaurantCaller.getAll()).thenReturn(mockCall)
     }
 
     @Test
     fun getAll_handlesSuccessfulResponseFromRequest() {
+        whenever(restaurantCaller.getAll()).thenReturn(mockCall)
         doAnswer {
             val callback = it.arguments[0] as Callback<List<Restaurant>>
             val successResponse = Response.success(asList(Restaurant(1, "1", "1", "", null, emptyList())))
@@ -39,6 +39,24 @@ class DefaultRestaurantRepoTest {
 
 
         val responseSingle = repo.getAll()
+
+
+        responseSingle.test().assertResult(asList(Restaurant(1, "1", "1", "", null, emptyList())))
+    }
+
+    @Test
+    fun getWhere_handlesSuccessfulResponseFromRequest() {
+        whenever(restaurantCaller.getWhere(any())).thenReturn(mockCall)
+        doAnswer {
+            val callback = it.arguments[0] as Callback<List<Restaurant>>
+            val successResponse = Response.success(asList(Restaurant(1, "1", "1", "", null, emptyList())))
+
+            callback.onResponse(mockCall, successResponse)
+            null
+        }.whenever(mockCall).enqueue(any())
+
+
+        val responseSingle = repo.getWhere(1)
 
 
         responseSingle.test().assertResult(asList(Restaurant(1, "1", "1", "", null, emptyList())))
