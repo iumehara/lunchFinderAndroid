@@ -35,7 +35,7 @@ class CategoryRecyclerViewAdapter(
         val category = categories[position]
         categoryNameTextView.text = category.name
         if (clickListener != null) {
-            categoryNameTextView.setOnClickListener({ _ -> clickListener.onClick(category, categoryNameTextView)})
+            categoryNameTextView.setOnClickListener({ _ -> clickListener.onClick(category, categoryNameTextView) })
         }
     }
 
@@ -47,6 +47,5 @@ class CategoryRecyclerViewAdapter(
             layoutManager = linearLayoutManager
             adapter = categoryRecyclerViewAdapter
         }
-
     }
 }

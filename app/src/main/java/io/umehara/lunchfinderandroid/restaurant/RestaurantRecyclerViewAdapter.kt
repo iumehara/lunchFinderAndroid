@@ -10,12 +10,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import io.umehara.lunchfinderandroid.MainActivity
 import io.umehara.lunchfinderandroid.R
 
+interface OnRestaurantClickListener {
+    fun onClick(restaurant: Restaurant, textView: TextView)
+}
 
-class RestaurantRecyclerViewAdapter(private val restaurants: List<Restaurant>,
-                                    private val clickListener: MainActivity.OnRestaurantClickListener) : Adapter<ViewHolder>() {
+class RestaurantRecyclerViewAdapter(
+        private val restaurants: List<Restaurant>,
+        private val clickListener: OnRestaurantClickListener
+) : Adapter<ViewHolder>() {
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,7 +35,7 @@ class RestaurantRecyclerViewAdapter(private val restaurants: List<Restaurant>,
         val restaurantNameTextView = holder.itemView.findViewById<TextView>(R.id.row_restaurant_name)
         val restaurant = restaurants[position]
         restaurantNameTextView.text = restaurant.name
-        restaurantNameTextView.setOnClickListener({ _ -> clickListener.onClick(restaurant) })
+        restaurantNameTextView.setOnClickListener({ _ -> clickListener.onClick(restaurant, restaurantNameTextView) })
     }
 
     fun setOnRecyclerView(context: Context, recyclerView: RecyclerView) {

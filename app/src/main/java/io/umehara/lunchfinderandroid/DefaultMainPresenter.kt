@@ -11,7 +11,7 @@ class DefaultMainPresenter
         private val view: MainView,
         private val restaurantRepo: RestaurantRepo,
         private val categoryRepo: CategoryRepo
-): MainPresenter {
+) : MainPresenter {
     private var compositeDisposable = CompositeDisposable()
 
     override fun getRestaurants() {

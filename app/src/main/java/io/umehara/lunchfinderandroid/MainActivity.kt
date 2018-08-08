@@ -11,22 +11,19 @@ import io.umehara.lunchfinderandroid.category.Category
 import io.umehara.lunchfinderandroid.category.CategoryRecyclerViewAdapter
 import io.umehara.lunchfinderandroid.category.OnCategoryClickListener
 import io.umehara.lunchfinderandroid.map.MultipleMarkerMap
+import io.umehara.lunchfinderandroid.restaurant.OnRestaurantClickListener
 import io.umehara.lunchfinderandroid.restaurant.Restaurant
 import io.umehara.lunchfinderandroid.restaurant.RestaurantRecyclerViewAdapter
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity(), MainView {
-    private lateinit var mapView: MapView
-
-    private lateinit var multipleMarkerMap: MultipleMarkerMap
-    private var selectedCategoryTextView: TextView? = null
     @Inject
     lateinit var presenter: MainPresenter
+    private lateinit var mapView: MapView
+    private lateinit var multipleMarkerMap: MultipleMarkerMap
+    private var selectedCategoryTextView: TextView? = null
+    private var selectedRestaurantTextView: TextView? = null
 
-    interface OnRestaurantClickListener {
-
-        fun onClick(restaurant: Restaurant)
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,23 +45,13 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
                         presenter.selectCategory(category.id)
 
                         if (selectedCategoryTextView != null) {
-                            unsetCurrentCategory(selectedCategoryTextView!!)
+                            unselectCategoryTextView(selectedCategoryTextView!!)
                         }
-
-                        setCurrentCategory(textView)
+                        selectCategoryTextView(textView)
                     }
                 }
         )
         categoryRecyclerViewAdapter.setOnRecyclerView(this, categoryRecyclerView)
-    }
-
-    fun setCurrentCategory(textView: TextView) {
-        textView.setBackgroundColor(Color.rgb(242, 153, 74))
-        selectedCategoryTextView = textView
-    }
-
-    fun unsetCurrentCategory(textView: TextView) {
-        textView.setBackgroundColor(Color.rgb(239, 199, 164))
     }
 
     override fun setRestaurantList(restaurants: List<Restaurant>) {
@@ -73,9 +60,14 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
         val recyclerViewAdapter = RestaurantRecyclerViewAdapter(
                 restaurants,
                 object : OnRestaurantClickListener {
-                    override fun onClick(restaurant: Restaurant) {
+                    override fun onClick(restaurant: Restaurant, textView: TextView) {
                         setDetail(restaurant)
                         multipleMarkerMap.updateMarker(restaurant.geolocation)
+
+                        if (selectedRestaurantTextView != null) {
+                            unselectRestaurantTextView(selectedRestaurantTextView!!)
+                        }
+                        selectRestaurantTextView(textView)
                     }
                 }
         )
@@ -136,5 +128,23 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
     override fun onLowMemory() {
         super.onLowMemory()
         mapView.onLowMemory()
+    }
+
+    private fun selectCategoryTextView(textView: TextView) {
+        textView.setBackgroundColor(Color.rgb(242, 153, 74))
+        selectedCategoryTextView = textView
+    }
+
+    private fun unselectCategoryTextView(textView: TextView) {
+        textView.setBackgroundColor(Color.rgb(239, 199, 164))
+    }
+
+    private fun selectRestaurantTextView(textView: TextView) {
+        textView.setBackgroundColor(Color.rgb(240, 240, 240))
+        selectedRestaurantTextView = textView
+    }
+
+    private fun unselectRestaurantTextView(textView: TextView) {
+        textView.setBackgroundColor(Color.rgb(255, 255, 255))
     }
 }
