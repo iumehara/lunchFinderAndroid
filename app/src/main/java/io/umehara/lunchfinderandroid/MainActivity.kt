@@ -1,5 +1,6 @@
 package io.umehara.lunchfinderandroid
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v7.widget.RecyclerView
@@ -18,13 +19,14 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
     private lateinit var mapView: MapView
 
     private lateinit var multipleMarkerMap: MultipleMarkerMap
+    private var selectedCategoryTextView: TextView? = null
     @Inject
     lateinit var presenter: MainPresenter
 
     interface OnRestaurantClickListener {
+
         fun onClick(restaurant: Restaurant)
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -42,12 +44,27 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
         val categoryRecyclerViewAdapter = CategoryRecyclerViewAdapter(
                 categories,
                 object : OnCategoryClickListener {
-                    override fun onClick(category: Category) {
-                        presenter.getCategoryRestaurants(category.id)
+                    override fun onClick(category: Category, textView: TextView) {
+                        presenter.selectCategory(category.id)
+
+                        if (selectedCategoryTextView != null) {
+                            unsetCurrentCategory(selectedCategoryTextView!!)
+                        }
+
+                        setCurrentCategory(textView)
                     }
                 }
         )
         categoryRecyclerViewAdapter.setOnRecyclerView(this, categoryRecyclerView)
+    }
+
+    fun setCurrentCategory(textView: TextView) {
+        textView.setBackgroundColor(Color.rgb(242, 153, 74))
+        selectedCategoryTextView = textView
+    }
+
+    fun unsetCurrentCategory(textView: TextView) {
+        textView.setBackgroundColor(Color.rgb(239, 199, 164))
     }
 
     override fun setRestaurantList(restaurants: List<Restaurant>) {
@@ -68,6 +85,10 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
     override fun setMap(restaurants: List<Restaurant>) {
         multipleMarkerMap = MultipleMarkerMap(restaurants)
         mapView.getMapAsync(multipleMarkerMap)
+    }
+
+    override fun updateMap(restaurants: List<Restaurant>) {
+        multipleMarkerMap.updateRestaurants(restaurants)
     }
 
     override fun setDetail(restaurant: Restaurant) {

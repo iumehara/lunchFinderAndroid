@@ -19,6 +19,11 @@ class FakeMainView : MainView {
         setMapArguments = restaurants
     }
 
+    var updateMapArguments: List<Restaurant>? = null
+    override fun updateMap(restaurants: List<Restaurant>) {
+        updateMapArguments = restaurants
+    }
+
     var setDetailArgument: Restaurant? = null
     override fun setDetail(restaurant: Restaurant) {
         setDetailArgument = restaurant

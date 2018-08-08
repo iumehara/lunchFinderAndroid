@@ -12,7 +12,7 @@ import android.widget.TextView
 import io.umehara.lunchfinderandroid.R
 
 interface OnCategoryClickListener {
-    fun onClick(category: Category)
+    fun onClick(category: Category, textView: TextView)
 }
 
 class CategoryRecyclerViewAdapter(
@@ -35,7 +35,7 @@ class CategoryRecyclerViewAdapter(
         val category = categories[position]
         categoryNameTextView.text = category.name
         if (clickListener != null) {
-            categoryNameTextView.setOnClickListener({ _ -> clickListener.onClick(category)})
+            categoryNameTextView.setOnClickListener({ _ -> clickListener.onClick(category, categoryNameTextView)})
         }
     }
 

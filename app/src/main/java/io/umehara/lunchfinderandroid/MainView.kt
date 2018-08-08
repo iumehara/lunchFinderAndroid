@@ -7,5 +7,6 @@ interface MainView {
     fun setCategoryList(categories: List<Category>)
     fun setRestaurantList(restaurants: List<Restaurant>)
     fun setMap(restaurants: List<Restaurant>)
+    fun updateMap(restaurants: List<Restaurant>)
     fun setDetail(restaurant: Restaurant)
 }

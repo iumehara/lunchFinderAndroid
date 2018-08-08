@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/category_recycler_view_row"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -12,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:layout_weight="1"
-        android:background="@android:color/holo_orange_light"
+        android:background="#EFC7A4"
         android:text="Category"
         android:textAlignment="center"
         android:visibility="visible" />

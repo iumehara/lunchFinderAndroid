@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import io.umehara.lunchfinderandroid.restaurant.Restaurant
 
-class MultipleMarkerMap(private val restaurants: List<Restaurant>) : OnMapReadyCallback {
+class MultipleMarkerMap(private var restaurants: List<Restaurant>) : OnMapReadyCallback {
     private var markers: MutableList<Marker> = mutableListOf()
     private var currentMarker: Marker? = null
     private lateinit var googleMap: GoogleMap
@@ -19,7 +19,7 @@ class MultipleMarkerMap(private val restaurants: List<Restaurant>) : OnMapReadyC
         val startingMarker = MarkerOptions().position(startingPoint).title("Roppongi Hills")
         googleMap.addMarker(startingMarker)
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startingPoint, 16.0F))
-        restaurants.forEach({
+        this.restaurants.forEach({
             val geolocation = it.geolocation
             if (geolocation != null) {
                 val markerOptions = MarkerOptions()
@@ -35,6 +35,21 @@ class MultipleMarkerMap(private val restaurants: List<Restaurant>) : OnMapReadyC
             setCurrent(it)
             false
         })
+    }
+
+    fun updateRestaurants(restaurants: List<Restaurant>) {
+        val latLngs: List<LatLng?> = restaurants.map {
+            val geo = it.geolocation
+            if (geo == null) {
+                null
+            } else {
+                LatLng(geo.lat.toDouble(), geo.long.toDouble())
+            }
+        }
+
+        markers.forEach {
+            it.isVisible = latLngs.contains(it.position)
+        }
     }
 
     fun updateMarker(geolocation: Geolocation?) {

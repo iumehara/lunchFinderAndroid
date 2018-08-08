@@ -40,15 +40,17 @@ class DefaultMainPresenter
         compositeDisposable.add(disposable)
     }
 
-    override fun getCategoryRestaurants(categoryId: Long) {
+    override fun selectCategory(categoryId: Long) {
         val disposable = restaurantRepo
                 .getWhere(categoryId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { restaurants ->
-                            view.setMap(restaurants)
+                            view.updateMap(restaurants)
                             view.setRestaurantList(restaurants)
-                            view.setDetail(restaurants[0])
+                            if (restaurants.isNotEmpty()) {
+                                view.setDetail(restaurants[0])
+                            }
                         },
                         { error -> println("Error" + error.message) }
                 )

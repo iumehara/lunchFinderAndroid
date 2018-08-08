@@ -3,7 +3,7 @@ package io.umehara.lunchfinderandroid.restaurant
 import io.reactivex.Single
 import java.util.Arrays.asList
 
-class StubRestaurantRepo: RestaurantRepo {
+class SuccessStubRestaurantRepo: RestaurantRepo {
     override fun getAll(): Single<List<Restaurant>> {
         return Single.create { observer ->
             val restaurants = asList(
@@ -23,6 +23,20 @@ class StubRestaurantRepo: RestaurantRepo {
                     Restaurant(3, "Third", "三", "", null, emptyList())
             )
             observer.onSuccess(restaurants)
+        }
+    }
+}
+
+class EmptyStubRestaurantRepo: RestaurantRepo {
+    override fun getAll(): Single<List<Restaurant>> {
+        return Single.create { observer ->
+            observer.onSuccess(emptyList())
+        }
+    }
+
+    override fun getWhere(categoryId: Long): Single<List<Restaurant>> {
+        return Single.create { observer ->
+            observer.onSuccess(emptyList())
         }
     }
 }
