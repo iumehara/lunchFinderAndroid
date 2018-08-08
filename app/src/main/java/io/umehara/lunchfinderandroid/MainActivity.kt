@@ -55,7 +55,7 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
     }
 
     override fun setRestaurantList(restaurants: List<Restaurant>) {
-        val restaurantRecyclerView = findViewById<RecyclerView>(R.id.restaurant_recycler_view)
+        val restaurantRecyclerView = findViewById<RecyclerView>(R.id.restaurants_recycler_view)
 
         val recyclerViewAdapter = RestaurantRecyclerViewAdapter(
                 restaurants,
@@ -90,7 +90,7 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
         val restaurantNameJpLabel = findViewById<TextView>(R.id.restaurant_name_jp)
         restaurantNameJpLabel.text = restaurant.nameJp
 
-        val categoryRecyclerView = findViewById<RecyclerView>(R.id.category_recycler_view)
+        val categoryRecyclerView = findViewById<RecyclerView>(R.id.restaurant_categories_recycler_view)
         val categoryRecyclerViewAdapter = CategoryRecyclerViewAdapter(restaurant.categories)
         categoryRecyclerViewAdapter.setOnRecyclerView(this, categoryRecyclerView)
     }
