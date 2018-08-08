@@ -23,7 +23,9 @@ class RestaurantRecyclerViewAdapter(
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.restaurant_recycler_view_row, parent, false)
+        val view = LayoutInflater
+                .from(parent.context)
+                .inflate(R.layout.restaurant_recycler_view_row, parent, false)
         return ViewHolder(view)
     }
 
@@ -35,7 +37,9 @@ class RestaurantRecyclerViewAdapter(
         val restaurantNameTextView = holder.itemView.findViewById<TextView>(R.id.row_restaurant_name)
         val restaurant = restaurants[position]
         restaurantNameTextView.text = restaurant.name
-        restaurantNameTextView.setOnClickListener({ _ -> clickListener.onClick(restaurant, restaurantNameTextView) })
+        restaurantNameTextView.setOnClickListener { _ ->
+            clickListener.onClick(restaurant, restaurantNameTextView)
+        }
     }
 
     fun setOnRecyclerView(context: Context, recyclerView: RecyclerView) {

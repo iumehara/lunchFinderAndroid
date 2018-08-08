@@ -22,7 +22,9 @@ class CategoryRecyclerViewAdapter(
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.category_recycler_view_row, parent, false)
+        val view = LayoutInflater
+                .from(parent.context)
+                .inflate(R.layout.category_recycler_view_row, parent, false)
         return ViewHolder(view)
     }
 
@@ -34,13 +36,18 @@ class CategoryRecyclerViewAdapter(
         val categoryNameTextView = holder.itemView.findViewById<TextView>(R.id.row_category_name)
         val category = categories[position]
         categoryNameTextView.text = category.name
-        if (clickListener != null) {
-            categoryNameTextView.setOnClickListener({ _ -> clickListener.onClick(category, categoryNameTextView) })
+        if (clickListener == null) return
+        categoryNameTextView.setOnClickListener { _ ->
+            clickListener.onClick(category, categoryNameTextView)
         }
     }
 
     fun setOnRecyclerView(context: Context, recyclerView: RecyclerView) {
-        val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        val linearLayoutManager = LinearLayoutManager(
+                context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+        )
         val categoryRecyclerViewAdapter = this
         recyclerView.apply {
             setHasFixedSize(true)
