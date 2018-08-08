@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v7.widget.RecyclerView
+import android.widget.Button
 import android.widget.TextView
 import com.google.android.gms.maps.MapView
 import dagger.android.support.DaggerAppCompatActivity
@@ -52,6 +53,9 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
                 }
         )
         categoryRecyclerViewAdapter.setOnRecyclerView(this, categoryRecyclerView)
+
+        val allCategoriesButton = findViewById<Button>(R.id.all_categories)
+        allCategoriesButton.setOnClickListener { presenter.getRestaurants() }
     }
 
     override fun setRestaurantList(restaurants: List<Restaurant>) {
