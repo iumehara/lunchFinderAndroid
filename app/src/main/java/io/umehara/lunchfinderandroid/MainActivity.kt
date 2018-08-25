@@ -3,7 +3,6 @@ package io.umehara.lunchfinderandroid
 import android.graphics.Color
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.support.v7.widget.RecyclerView
 import android.widget.Button
 import android.widget.TextView
 import com.google.android.gms.maps.MapView
@@ -18,10 +17,8 @@ import io.umehara.lunchfinderandroid.restaurant.RestaurantRecyclerViewAdapter
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity(), MainView {
-    @Inject
-    lateinit var presenter: MainPresenter
+    @Inject lateinit var presenter: MainPresenter
     private lateinit var mapView: MapView
-    private lateinit var multipleMarkerMap: MultipleMarkerMap
     private var selectedCategoryTextView: TextView? = null
     private var selectedRestaurantTextView: TextView? = null
 
@@ -30,73 +27,50 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
 
         setContentView(R.layout.activity_main)
 
-        presenter.getRestaurants()
-        presenter.getCategories()
-
         mapView = findViewById(R.id.multiple_marker_map)
         mapView.onCreate(savedInstanceState)
+
+        presenter.setup()
     }
 
     override fun setCategoryList(categories: List<Category>) {
-        val categoryRecyclerView = findViewById<RecyclerView>(R.id.categories_recycler_view)
-        val categoryRecyclerViewAdapter = CategoryRecyclerViewAdapter(
+        val adapter = CategoryRecyclerViewAdapter(
                 categories,
                 object : OnCategoryClickListener {
                     override fun onClick(category: Category, textView: TextView) {
-                        presenter.selectCategory(category.id)
-
-                        if (selectedCategoryTextView != null) {
-                            unselectCategoryTextView(selectedCategoryTextView!!)
-                        }
-                        selectCategoryTextView(textView)
+                        selectCategory(category, textView)
                     }
                 }
         )
-        categoryRecyclerViewAdapter.setOnRecyclerView(this, categoryRecyclerView)
-
-        val allCategoriesButton = findViewById<Button>(R.id.all_categories)
-        allCategoriesButton.setOnClickListener { presenter.getRestaurants() }
+        adapter.setOnRecyclerView(this, findViewById(R.id.categories_recycler_view))
+        findViewById<Button>(R.id.all_categories).setOnClickListener {
+            unHighlightSelectedCategoryTextView()
+            selectedCategoryTextView = null
+            presenter.selectAllRestaurants()
+        }
     }
 
     override fun setRestaurantList(restaurants: List<Restaurant>) {
-        val restaurantRecyclerView = findViewById<RecyclerView>(R.id.restaurants_recycler_view)
-
-        val recyclerViewAdapter = RestaurantRecyclerViewAdapter(
+        val adapter = RestaurantRecyclerViewAdapter(
                 restaurants,
                 object : OnRestaurantClickListener {
                     override fun onClick(restaurant: Restaurant, textView: TextView) {
-                        setDetail(restaurant)
-                        multipleMarkerMap.updateMarker(restaurant.geolocation)
-
-                        if (selectedRestaurantTextView != null) {
-                            unselectRestaurantTextView(selectedRestaurantTextView!!)
-                        }
-                        selectRestaurantTextView(textView)
+                        selectRestaurant(restaurant, textView)
                     }
                 }
         )
-        recyclerViewAdapter.setOnRecyclerView(this, restaurantRecyclerView)
+        adapter.setOnRecyclerView(this, findViewById(R.id.restaurants_recycler_view))
     }
 
-    override fun setMap(restaurants: List<Restaurant>) {
-        multipleMarkerMap = MultipleMarkerMap(restaurants)
+    override fun setMap(multipleMarkerMap: MultipleMarkerMap) {
         mapView.getMapAsync(multipleMarkerMap)
     }
 
-    override fun updateMap(restaurants: List<Restaurant>) {
-        multipleMarkerMap.updateRestaurants(restaurants)
-    }
-
-    override fun setDetail(restaurant: Restaurant) {
-        val restaurantNameLabel = findViewById<TextView>(R.id.restaurant_name)
-        restaurantNameLabel.text = restaurant.name
-
-        val restaurantNameJpLabel = findViewById<TextView>(R.id.restaurant_name_jp)
-        restaurantNameJpLabel.text = restaurant.nameJp
-
-        val categoryRecyclerView = findViewById<RecyclerView>(R.id.restaurant_categories_recycler_view)
-        val categoryRecyclerViewAdapter = CategoryRecyclerViewAdapter(restaurant.categories)
-        categoryRecyclerViewAdapter.setOnRecyclerView(this, categoryRecyclerView)
+    override fun setRestaurantDetails(restaurant: Restaurant) {
+        findViewById<TextView>(R.id.restaurant_name).text = restaurant.name
+        findViewById<TextView>(R.id.restaurant_name_jp).text = restaurant.nameJp
+        CategoryRecyclerViewAdapter(restaurant.categories)
+                .setOnRecyclerView(this, findViewById(R.id.restaurant_categories_recycler_view))
     }
 
     override fun onStart() {
@@ -134,21 +108,48 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
         mapView.onLowMemory()
     }
 
+    private fun selectCategory(category: Category, textView: TextView) {
+        presenter.selectCategory(category.id)
+        selectCategoryTextView(textView)
+    }
+
+    private fun selectRestaurant(restaurant: Restaurant, textView: TextView) {
+        presenter.selectRestaurant(restaurant)
+        selectRestaurantTextView(textView)
+    }
+
     private fun selectCategoryTextView(textView: TextView) {
-        textView.setBackgroundColor(Color.rgb(242, 153, 74))
+        if (textView == selectedCategoryTextView) return
+        unHighlightSelectedCategoryTextView()
+        highlightCategoryTextView(textView)
         selectedCategoryTextView = textView
     }
 
-    private fun unselectCategoryTextView(textView: TextView) {
-        textView.setBackgroundColor(Color.rgb(239, 199, 164))
-    }
-
     private fun selectRestaurantTextView(textView: TextView) {
-        textView.setBackgroundColor(Color.rgb(240, 240, 240))
+        if (textView == selectedRestaurantTextView) return
+        unHighlightSelectedRestaurantTextView()
+        highlightRestaurantTextView(textView)
         selectedRestaurantTextView = textView
     }
 
-    private fun unselectRestaurantTextView(textView: TextView) {
-        textView.setBackgroundColor(Color.rgb(255, 255, 255))
+    private fun unHighlightSelectedCategoryTextView() {
+        selectedCategoryTextView?.setBackgroundColor(actionColor)
     }
+
+    private fun highlightCategoryTextView(textView: TextView) {
+        textView.setBackgroundColor(accentedActionColor)
+    }
+
+    private fun unHighlightSelectedRestaurantTextView() {
+        selectedRestaurantTextView?.setBackgroundColor(backgroundColor)
+    }
+
+    private fun highlightRestaurantTextView(textView: TextView) {
+        textView.setBackgroundColor(accentedBackgroundColor)
+    }
+
+    val actionColor = Color.rgb(239, 199, 164)
+    val accentedActionColor = Color.rgb(242, 153, 74)
+    val backgroundColor = Color.rgb(255, 255, 255)
+    val accentedBackgroundColor = Color.rgb(240, 240, 240)
 }

@@ -5,7 +5,11 @@ import dagger.Provides
 import io.umehara.lunchfinderandroid.category.CategoryRepo
 import io.umehara.lunchfinderandroid.category.DefaultCategoryRepo
 import io.umehara.lunchfinderandroid.category.RetrofitCategoryCaller
-import io.umehara.lunchfinderandroid.restaurant.*
+import io.umehara.lunchfinderandroid.map.DefaultMultipleMarkerMap
+import io.umehara.lunchfinderandroid.map.MultipleMarkerMap
+import io.umehara.lunchfinderandroid.restaurant.DefaultRestaurantRepo
+import io.umehara.lunchfinderandroid.restaurant.RestaurantRepo
+import io.umehara.lunchfinderandroid.restaurant.RetrofitRestaurantCaller
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -20,9 +24,10 @@ class MainActivityModule {
     fun providesMainPresenter(
             mainView: MainView,
             restaurantRepo: RestaurantRepo,
-            categoryRepo: CategoryRepo
+            categoryRepo: CategoryRepo,
+            multipleMarkerMap: MultipleMarkerMap
     ): MainPresenter {
-        return DefaultMainPresenter(mainView, restaurantRepo, categoryRepo)
+        return DefaultMainPresenter(mainView, restaurantRepo, categoryRepo, multipleMarkerMap)
     }
 
     @Provides
@@ -53,5 +58,10 @@ class MainActivityModule {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(RetrofitRestaurantCaller::class.java)
+    }
+
+    @Provides
+    fun providesMultipleMarkerMap(): MultipleMarkerMap {
+        return DefaultMultipleMarkerMap()
     }
 }

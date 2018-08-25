@@ -2,83 +2,71 @@ package io.umehara.lunchfinderandroid
 
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.schedulers.Schedulers
-import io.umehara.lunchfinderandroid.category.Category
 import io.umehara.lunchfinderandroid.category.StubCategoryRepo
-import io.umehara.lunchfinderandroid.restaurant.EmptyStubRestaurantRepo
+import io.umehara.lunchfinderandroid.map.FakeMultipleMarkerMap
+import io.umehara.lunchfinderandroid.map.Geolocation
 import io.umehara.lunchfinderandroid.restaurant.Restaurant
 import io.umehara.lunchfinderandroid.restaurant.SuccessStubRestaurantRepo
 import org.hamcrest.core.IsEqual.equalTo
-import org.junit.Assert.assertNull
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
+import java.math.BigDecimal
 import java.util.Arrays.asList
 
 class DefaultMainPresenterTest {
     private lateinit var defaultMainPresenter: DefaultMainPresenter
-    private lateinit var view: FakeMainView
+    private lateinit var fakeMainView: FakeMainView
     private lateinit var restaurantRepoSuccess: SuccessStubRestaurantRepo
     private lateinit var categoryRepo: StubCategoryRepo
+    private lateinit var fakeMultipleMarkerMap: FakeMultipleMarkerMap
 
     @Before
     fun setUp() {
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
-        view = FakeMainView()
+        fakeMainView = FakeMainView()
         restaurantRepoSuccess = SuccessStubRestaurantRepo()
         categoryRepo = StubCategoryRepo()
+        fakeMultipleMarkerMap = FakeMultipleMarkerMap()
+        defaultMainPresenter = DefaultMainPresenter(fakeMainView, restaurantRepoSuccess, categoryRepo, fakeMultipleMarkerMap)
     }
 
     @Test
-    fun getRestaurants_setsRestaurantsToRestaurantList() {
-        defaultMainPresenter = DefaultMainPresenter(view, restaurantRepoSuccess, categoryRepo)
-        defaultMainPresenter.getRestaurants()
+    fun setup_createsMapWithRestaurantMarkers() {
+        defaultMainPresenter.setup()
 
         val expectedRestaurants = asList(
                 Restaurant(1, "First", "一", "", null, emptyList()),
                 Restaurant(2, "Second", "二", "", null, emptyList()),
                 Restaurant(3, "Third", "三", "", null, emptyList())
         )
-        assertThat(view.setRestaurantListArguments, equalTo(expectedRestaurants))
+        assertNotNull(fakeMainView.setMapArguments)
+        assertThat(fakeMultipleMarkerMap.setMarkersArguments, equalTo(expectedRestaurants))
     }
 
     @Test
-    fun getRestaurants_setsRestaurantsToMap() {
-        defaultMainPresenter = DefaultMainPresenter(view, restaurantRepoSuccess, categoryRepo)
-        defaultMainPresenter.getRestaurants()
+    fun setup_setsRestaurantList() {
+        defaultMainPresenter.setup()
 
         val expectedRestaurants = asList(
                 Restaurant(1, "First", "一", "", null, emptyList()),
                 Restaurant(2, "Second", "二", "", null, emptyList()),
                 Restaurant(3, "Third", "三", "", null, emptyList())
         )
-        assertThat(view.setMapArguments, equalTo(expectedRestaurants))
+        assertThat(fakeMainView.setRestaurantListArguments, equalTo(expectedRestaurants))
     }
 
     @Test
-    fun getRestaurants_setsRestaurantToDetail() {
-        defaultMainPresenter = DefaultMainPresenter(view, restaurantRepoSuccess, categoryRepo)
-        defaultMainPresenter.getRestaurants()
+    fun setup_setsRestaurantDetail() {
+        defaultMainPresenter.setup()
 
-        val expectedRestaurant= Restaurant(1, "First", "一", "", null, emptyList())
-        assertThat(view.setDetailArgument, equalTo(expectedRestaurant))
+        val expectedRestaurant = Restaurant(1, "First", "一", "", null, emptyList())
+        assertThat(fakeMainView.setRestaurantDetailArgument, equalTo(expectedRestaurant))
     }
 
     @Test
-    fun getCategories_setsCategoriesToCategoryList() {
-        defaultMainPresenter = DefaultMainPresenter(view, restaurantRepoSuccess, categoryRepo)
-        defaultMainPresenter.getCategories()
-
-
-        val expectedCategories = asList(
-                Category(1, "Pizza", 0),
-                Category(2, "Sushi", 0)
-        )
-        assertThat(view.setCategoryListArguments, equalTo(expectedCategories))
-    }
-
-    @Test
-    fun getCategoryRestaurants_setsRestaurantsToRestaurantList() {
-        defaultMainPresenter = DefaultMainPresenter(view, restaurantRepoSuccess, categoryRepo)
+    fun selectCategory_setsRestaurantList() {
         defaultMainPresenter.selectCategory(1)
 
         val expectedRestaurants = asList(
@@ -86,12 +74,19 @@ class DefaultMainPresenterTest {
                 Restaurant(2, "Second", "二", "", null, emptyList()),
                 Restaurant(3, "Third", "三", "", null, emptyList())
         )
-        assertThat(view.setRestaurantListArguments, equalTo(expectedRestaurants))
+        assertThat(fakeMainView.setRestaurantListArguments, equalTo(expectedRestaurants))
     }
 
     @Test
-    fun getCategoryRestaurants_setsRestaurantsToMap() {
-        defaultMainPresenter = DefaultMainPresenter(view, restaurantRepoSuccess, categoryRepo)
+    fun selectCategory_setsRestaurantDetail() {
+        defaultMainPresenter.selectCategory(1)
+
+        val expectedRestaurant = Restaurant(1, "First", "一", "", null, emptyList())
+        assertThat(fakeMainView.setRestaurantDetailArgument, equalTo(expectedRestaurant))
+    }
+
+    @Test
+    fun selectCategory_setsMapMarkers() {
         defaultMainPresenter.selectCategory(1)
 
         val expectedRestaurants = asList(
@@ -99,23 +94,46 @@ class DefaultMainPresenterTest {
                 Restaurant(2, "Second", "二", "", null, emptyList()),
                 Restaurant(3, "Third", "三", "", null, emptyList())
         )
-        assertThat(view.updateMapArguments, equalTo(expectedRestaurants))
+        assertThat(fakeMultipleMarkerMap.updateRestaurantsArguments, equalTo(expectedRestaurants))
     }
 
     @Test
-    fun getCategoryRestaurants_setsRestaurantToDetail() {
-        defaultMainPresenter = DefaultMainPresenter(view, restaurantRepoSuccess, categoryRepo)
-        defaultMainPresenter.selectCategory(1)
+    fun selectRestaurant_updatesMarker() {
+        val stubRestaurant = Restaurant(1, "First", "一", "", Geolocation(BigDecimal(1.11111), BigDecimal(2.22222)), emptyList())
+        defaultMainPresenter.selectRestaurant(stubRestaurant)
 
-        val expectedRestaurant= Restaurant(1, "First", "一", "", null, emptyList())
-        assertThat(view.setDetailArgument, equalTo(expectedRestaurant))
+        assertThat(fakeMultipleMarkerMap.updateMarkerArguments, equalTo(Geolocation(BigDecimal(1.11111), BigDecimal(2.22222))))
     }
 
     @Test
-    fun getCategoryRestaurants_doesNotSetRestaurantToDetailIfThereAreNoRestaurants() {
-        defaultMainPresenter = DefaultMainPresenter(view, EmptyStubRestaurantRepo(), categoryRepo)
-        defaultMainPresenter.selectCategory(1)
+    fun selectRestaurant_setsRestaurantDetail() {
+        val stubRestaurant = Restaurant(1, "First", "一", "", Geolocation(BigDecimal(1.11111), BigDecimal(2.22222)), emptyList())
+        defaultMainPresenter.selectRestaurant(stubRestaurant)
 
-        assertNull(view.setDetailArgument)
+        assertThat(fakeMainView.setRestaurantDetailArgument, equalTo(stubRestaurant))
+    }
+
+    @Test
+    fun selectAllRestaurants_setsRestaurantList() {
+        defaultMainPresenter.selectAllRestaurants()
+
+        val expectedRestaurants = asList(
+                Restaurant(1, "First", "一", "", null, emptyList()),
+                Restaurant(2, "Second", "二", "", null, emptyList()),
+                Restaurant(3, "Third", "三", "", null, emptyList())
+        )
+        assertThat(fakeMainView.setRestaurantListArguments, equalTo(expectedRestaurants))
+    }
+
+    @Test
+    fun selectAllRestaurants_setsMarkers() {
+        defaultMainPresenter.selectAllRestaurants()
+
+        val expectedRestaurants = asList(
+                Restaurant(1, "First", "一", "", null, emptyList()),
+                Restaurant(2, "Second", "二", "", null, emptyList()),
+                Restaurant(3, "Third", "三", "", null, emptyList())
+        )
+        assertThat(fakeMultipleMarkerMap.updateRestaurantsArguments, equalTo(expectedRestaurants))
     }
 }

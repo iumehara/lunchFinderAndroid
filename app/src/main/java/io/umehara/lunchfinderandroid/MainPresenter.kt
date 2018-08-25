@@ -1,7 +1,10 @@
 package io.umehara.lunchfinderandroid
 
+import io.umehara.lunchfinderandroid.restaurant.Restaurant
+
 interface MainPresenter {
-    fun getRestaurants()
-    fun getCategories()
+    fun setup()
     fun selectCategory(categoryId: Long)
+    fun selectAllRestaurants()
+    fun selectRestaurant(restaurant: Restaurant)
 }

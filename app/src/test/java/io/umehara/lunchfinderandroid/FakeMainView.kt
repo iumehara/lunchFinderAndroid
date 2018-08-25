@@ -1,6 +1,7 @@
 package io.umehara.lunchfinderandroid
 
 import io.umehara.lunchfinderandroid.category.Category
+import io.umehara.lunchfinderandroid.map.MultipleMarkerMap
 import io.umehara.lunchfinderandroid.restaurant.Restaurant
 
 class FakeMainView : MainView {
@@ -14,18 +15,13 @@ class FakeMainView : MainView {
         setCategoryListArguments = categories
     }
 
-    var setMapArguments: List<Restaurant>? = null
-    override fun setMap(restaurants: List<Restaurant>) {
-        setMapArguments = restaurants
+    var setMapArguments: MultipleMarkerMap? = null
+    override fun setMap(multipleMarkerMap: MultipleMarkerMap) {
+        setMapArguments = multipleMarkerMap
     }
 
-    var updateMapArguments: List<Restaurant>? = null
-    override fun updateMap(restaurants: List<Restaurant>) {
-        updateMapArguments = restaurants
-    }
-
-    var setDetailArgument: Restaurant? = null
-    override fun setDetail(restaurant: Restaurant) {
-        setDetailArgument = restaurant
+    var setRestaurantDetailArgument: Restaurant? = null
+    override fun setRestaurantDetails(restaurant: Restaurant) {
+        setRestaurantDetailArgument = restaurant
     }
 }
