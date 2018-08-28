@@ -19,6 +19,10 @@ import javax.inject.Inject
 class MainActivity : DaggerAppCompatActivity(), MainView {
     @Inject lateinit var presenter: MainPresenter
     private lateinit var mapView: MapView
+    private var restaurantList: MutableList<Restaurant> = mutableListOf()
+    private lateinit var restaurantRecyclerViewAdapter :RestaurantRecyclerViewAdapter
+    private var categoryList: MutableList<Category> = mutableListOf()
+    private lateinit var categoryRecyclerViewAdapter :CategoryRecyclerViewAdapter
     private var selectedCategoryTextView: TextView? = null
     private var selectedRestaurantTextView: TextView? = null
 
@@ -27,22 +31,34 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
 
         setContentView(R.layout.activity_main)
 
-        mapView = findViewById(R.id.multiple_marker_map)
-        mapView.onCreate(savedInstanceState)
-
         presenter.setup()
     }
 
-    override fun setCategoryList(categories: List<Category>) {
-        val adapter = CategoryRecyclerViewAdapter(
-                categories,
+    override fun setupRestaurantList() {
+        restaurantRecyclerViewAdapter = RestaurantRecyclerViewAdapter(
+                restaurantList,
+                object : OnRestaurantClickListener {
+                    override fun onClick(restaurant: Restaurant, textView: TextView) {
+                        selectRestaurant(restaurant, textView)
+                    }
+                }
+        )
+
+
+        restaurantRecyclerViewAdapter.setOnRecyclerView(this, findViewById(R.id.restaurants_recycler_view))
+    }
+
+    override fun setupCategoryList() {
+        categoryRecyclerViewAdapter = CategoryRecyclerViewAdapter(
+                categoryList,
                 object : OnCategoryClickListener {
                     override fun onClick(category: Category, textView: TextView) {
                         selectCategory(category, textView)
                     }
                 }
         )
-        adapter.setOnRecyclerView(this, findViewById(R.id.categories_recycler_view))
+        categoryRecyclerViewAdapter.setOnRecyclerView(this, findViewById(R.id.categories_recycler_view))
+
         findViewById<Button>(R.id.all_categories).setOnClickListener {
             unHighlightSelectedCategoryTextView()
             selectedCategoryTextView = null
@@ -50,19 +66,21 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
         }
     }
 
-    override fun setRestaurantList(restaurants: List<Restaurant>) {
-        val adapter = RestaurantRecyclerViewAdapter(
-                restaurants,
-                object : OnRestaurantClickListener {
-                    override fun onClick(restaurant: Restaurant, textView: TextView) {
-                        selectRestaurant(restaurant, textView)
-                    }
-                }
-        )
-        adapter.setOnRecyclerView(this, findViewById(R.id.restaurants_recycler_view))
+    override fun updateRestaurantList(restaurants: List<Restaurant>) {
+        restaurantList.clear()
+        restaurantList.addAll(restaurants)
+        restaurantRecyclerViewAdapter.notifyDataSetChanged()
+    }
+
+    override fun updateCategoryList(categories: List<Category>) {
+        categoryList.clear()
+        categoryList.addAll(categories)
+        categoryRecyclerViewAdapter.notifyDataSetChanged()
     }
 
     override fun setMap(multipleMarkerMap: MultipleMarkerMap) {
+        mapView = findViewById(R.id.multiple_marker_map)
+        mapView.onCreate(null)
         mapView.getMapAsync(multipleMarkerMap)
     }
 

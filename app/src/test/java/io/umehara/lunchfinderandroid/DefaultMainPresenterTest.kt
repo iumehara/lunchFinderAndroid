@@ -54,7 +54,7 @@ class DefaultMainPresenterTest {
                 Restaurant(2, "Second", "二", "", null, emptyList()),
                 Restaurant(3, "Third", "三", "", null, emptyList())
         )
-        assertThat(fakeMainView.setRestaurantListArguments, equalTo(expectedRestaurants))
+        assertThat(fakeMainView.updateRestaurantListArguments, equalTo(expectedRestaurants))
     }
 
     @Test
@@ -67,6 +67,7 @@ class DefaultMainPresenterTest {
 
     @Test
     fun selectCategory_setsRestaurantList() {
+        defaultMainPresenter.setup()
         defaultMainPresenter.selectCategory(1)
 
         val expectedRestaurants = asList(
@@ -74,11 +75,12 @@ class DefaultMainPresenterTest {
                 Restaurant(2, "Second", "二", "", null, emptyList()),
                 Restaurant(3, "Third", "三", "", null, emptyList())
         )
-        assertThat(fakeMainView.setRestaurantListArguments, equalTo(expectedRestaurants))
+        assertThat(fakeMainView.updateRestaurantListArguments, equalTo(expectedRestaurants))
     }
 
     @Test
     fun selectCategory_setsRestaurantDetail() {
+        defaultMainPresenter.setup()
         defaultMainPresenter.selectCategory(1)
 
         val expectedRestaurant = Restaurant(1, "First", "一", "", null, emptyList())
@@ -87,6 +89,7 @@ class DefaultMainPresenterTest {
 
     @Test
     fun selectCategory_setsMapMarkers() {
+        defaultMainPresenter.setup()
         defaultMainPresenter.selectCategory(1)
 
         val expectedRestaurants = asList(
@@ -99,6 +102,7 @@ class DefaultMainPresenterTest {
 
     @Test
     fun selectRestaurant_updatesMarker() {
+        defaultMainPresenter.setup()
         val stubRestaurant = Restaurant(1, "First", "一", "", Geolocation(BigDecimal(1.11111), BigDecimal(2.22222)), emptyList())
         defaultMainPresenter.selectRestaurant(stubRestaurant)
 
@@ -107,6 +111,7 @@ class DefaultMainPresenterTest {
 
     @Test
     fun selectRestaurant_setsRestaurantDetail() {
+        defaultMainPresenter.setup()
         val stubRestaurant = Restaurant(1, "First", "一", "", Geolocation(BigDecimal(1.11111), BigDecimal(2.22222)), emptyList())
         defaultMainPresenter.selectRestaurant(stubRestaurant)
 
@@ -115,6 +120,7 @@ class DefaultMainPresenterTest {
 
     @Test
     fun selectAllRestaurants_setsRestaurantList() {
+        defaultMainPresenter.setup()
         defaultMainPresenter.selectAllRestaurants()
 
         val expectedRestaurants = asList(
@@ -122,11 +128,12 @@ class DefaultMainPresenterTest {
                 Restaurant(2, "Second", "二", "", null, emptyList()),
                 Restaurant(3, "Third", "三", "", null, emptyList())
         )
-        assertThat(fakeMainView.setRestaurantListArguments, equalTo(expectedRestaurants))
+        assertThat(fakeMainView.updateRestaurantListArguments, equalTo(expectedRestaurants))
     }
 
     @Test
     fun selectAllRestaurants_setsMarkers() {
+        defaultMainPresenter.setup()
         defaultMainPresenter.selectAllRestaurants()
 
         val expectedRestaurants = asList(

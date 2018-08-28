@@ -18,6 +18,8 @@ class DefaultMainPresenter
     private var compositeDisposable = CompositeDisposable()
 
     override fun setup() {
+        view.setupRestaurantList()
+        view.setupCategoryList()
         view.setMap(multipleMarkerMap)
         getRestaurants()
         getCategories()
@@ -30,7 +32,7 @@ class DefaultMainPresenter
                 .subscribe(
                         { restaurants ->
                             multipleMarkerMap.updateRestaurants(restaurants)
-                            view.setRestaurantList(restaurants)
+                            view.updateRestaurantList(restaurants)
                             if (restaurants.isNotEmpty()) {
                                 view.setRestaurantDetails(restaurants[0])
                             }
@@ -51,7 +53,7 @@ class DefaultMainPresenter
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { restaurants ->
-                            view.setRestaurantList(restaurants)
+                            view.updateRestaurantList(restaurants)
                             multipleMarkerMap.updateRestaurants(restaurants)
                         },
                         { error -> println("Error" + error.message) }
@@ -66,7 +68,7 @@ class DefaultMainPresenter
                 .subscribe(
                         { restaurants ->
                             multipleMarkerMap.setMarkers(restaurants)
-                            view.setRestaurantList(restaurants)
+                            view.updateRestaurantList(restaurants)
                             view.setRestaurantDetails(restaurants[0])
                         },
                         { error -> println("Error" + error.message) }
@@ -79,7 +81,7 @@ class DefaultMainPresenter
                 .getAll()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { categories -> view.setCategoryList(categories) },
+                        { categories -> view.updateCategoryList(categories) },
                         { error -> println("Error" + error.message) }
                 )
         compositeDisposable.add(disposable)

@@ -5,8 +5,10 @@ import io.umehara.lunchfinderandroid.map.MultipleMarkerMap
 import io.umehara.lunchfinderandroid.restaurant.Restaurant
 
 interface MainView {
-    fun setCategoryList(categories: List<Category>)
-    fun setRestaurantList(restaurants: List<Restaurant>)
+    fun setupRestaurantList()
+    fun setupCategoryList()
+    fun updateRestaurantList(restaurants: List<Restaurant>)
+    fun updateCategoryList(categories: List<Category>)
     fun setMap(multipleMarkerMap: MultipleMarkerMap)
     fun setRestaurantDetails(restaurant: Restaurant)
 }
