@@ -9,8 +9,12 @@ class StubCategoryRepo : CategoryRepo {
     override fun getAll(): Single<List<Category>> {
         return Single.create { observer ->
             val categories = asList(
-                    Category(1, "Pizza", 0),
-                    Category(2, "Sushi", 0)
+                    Category(1, "curry"),
+                    Category(2, "pasta"),
+                    Category(3, "ramen"),
+                    Category(4, "spicy"),
+                    Category(5, "tonkatsu")
+
             )
             observer.onSuccess(categories)
         }

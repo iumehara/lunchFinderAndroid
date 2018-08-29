@@ -30,7 +30,7 @@ class MainActivityModule {
 
     @Provides
     fun providesRestaurantRepo(): RestaurantRepo {
-        return SuccessStubRestaurantRepo()
+        return FakeRestaurantRepo()
     }
 
     @Provides
