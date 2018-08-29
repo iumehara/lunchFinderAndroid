@@ -19,6 +19,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "version"
+    productFlavors {
+        dev {
+            dimension "version"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+        }
+        mock {
+            dimension "version"
+            applicationIdSuffix ".mock"
+            versionNameSuffix "-mock"
+        }
+    }
 }
 
 dependencies {
@@ -47,6 +60,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:3.0.2', {
+            exclude group: 'com.android.support', module: 'support-v4'
+    })
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
 }

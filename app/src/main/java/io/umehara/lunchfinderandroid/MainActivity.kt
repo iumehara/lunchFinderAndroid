@@ -17,15 +17,16 @@ import io.umehara.lunchfinderandroid.restaurant.RestaurantRecyclerViewAdapter
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity(), MainView {
-    @Inject lateinit var presenter: MainPresenter
+    @Inject
+    lateinit var presenter: MainPresenter
+
     private lateinit var mapView: MapView
     private var restaurantList: MutableList<Restaurant> = mutableListOf()
-    private lateinit var restaurantRecyclerViewAdapter :RestaurantRecyclerViewAdapter
+    private lateinit var restaurantRecyclerViewAdapter : RestaurantRecyclerViewAdapter
     private var categoryList: MutableList<Category> = mutableListOf()
-    private lateinit var categoryRecyclerViewAdapter :CategoryRecyclerViewAdapter
+    private lateinit var categoryRecyclerViewAdapter : CategoryRecyclerViewAdapter
     private var selectedCategoryTextView: TextView? = null
     private var selectedRestaurantTextView: TextView? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
